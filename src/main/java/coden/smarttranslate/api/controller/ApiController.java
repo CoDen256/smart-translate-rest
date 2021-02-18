@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ApiController {
-    @GetMapping("/api/smarttrans")
+    @GetMapping("/test")
     public String test(){
-        return "It worked.";
+        return "It worked :)";
     }
 }
