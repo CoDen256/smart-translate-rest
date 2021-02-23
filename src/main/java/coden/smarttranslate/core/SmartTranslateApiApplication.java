@@ -1,4 +1,4 @@
-package coden.smarttranslate.api;
+package coden.smarttranslate.core;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
