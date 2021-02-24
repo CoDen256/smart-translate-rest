@@ -40,7 +40,7 @@ public class MultitranTranslationResponse {
         this.originalPhrase = originalPhrase;
     }
 
-    public List<String> getTranslation() {
+    public List<String> getTranslations() {
         return translation;
     }
 

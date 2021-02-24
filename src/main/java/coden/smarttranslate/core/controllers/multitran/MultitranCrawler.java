@@ -30,7 +30,8 @@ public class MultitranCrawler {
 
     public List<String> parseTranslations(Language source, Language target, String phrase) throws IOException {
         String url = getUrl(source, target, phrase);
-        return parseDocumentTranslations(Jsoup.connect(url).get(), source, target);
+        Document document = Jsoup.connect(url).get();
+        return parseDocumentTranslations(document, source, target);
     }
 
     private List<String> parseDocumentTranslations(Document document, Language source, Language target){
