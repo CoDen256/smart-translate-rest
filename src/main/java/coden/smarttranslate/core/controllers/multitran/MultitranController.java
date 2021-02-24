@@ -19,14 +19,14 @@ public class MultitranController {
     }
     // TODO: validation, inaccessibility of multitran
     @PostMapping(value="/translate", produces = "application/json")
-    public MultitranResponse translate(@RequestBody MultitranRequest payload) throws IOException {
+    public MultitranTranslationResponse translate(@RequestBody MultitranTranslationRequest payload) throws IOException {
         String url = crawler.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
         List<String> translations = crawler.parseTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
 
-        MultitranResponse response = new MultitranResponse(payload.getPhrase());
+        MultitranTranslationResponse response = new MultitranTranslationResponse(payload.getPhrase());
         response.setSourceLanguage(payload.getSourceLanguage());
         response.setTargetLanguage(payload.getTargetLanguage());
-        response.setTranslatedPhrase(translations);
+        response.setTranslations(translations);
         response.setUrl(url);
 
         return response;

@@ -2,7 +2,7 @@ package coden.smarttranslate.core.controllers.multitran;
 
 import coden.smarttranslate.core.controllers.Language;
 
-public class MultitranRequest {
+public class MultitranTranslationRequest {
 
     private Language targetLanguage;
     private Language sourceLanguage;
