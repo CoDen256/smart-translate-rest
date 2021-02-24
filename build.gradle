@@ -15,7 +15,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.apache.commons', name: 'commons-text', version: '1.9'
-//    implementation group: 'edu.uci.ics', name: 'crawler4j', version: '4.4.0'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

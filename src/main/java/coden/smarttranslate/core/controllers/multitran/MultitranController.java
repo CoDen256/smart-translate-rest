@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,7 @@ public class MultitranController {
     }
     // TODO: validation, inaccessibility of multitran
     @PostMapping(value="/translate", produces = "application/json")
-    public MultitranResponse translate(@RequestBody MultitranRequest payload){
+    public MultitranResponse translate(@RequestBody MultitranRequest payload) throws IOException {
         String url = crawler.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
         List<String> translations = crawler.parseTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
 
