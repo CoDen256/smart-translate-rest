@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ReversoCrawler {
@@ -26,6 +27,7 @@ public class ReversoCrawler {
 
     public static final String HIGHLIGHT_TAG_OPEN = "<em>";
     public static final String HIGHLIGHT_TAG_CLOSE = "</em>";
+    public static final Pattern LINKS_PATTERN = Pattern.compile("</?a[^>]*>");
 
 
     public List<ContextTranslation> parseContextTranslation(Language source, Language target, String phrase) throws IOException {
@@ -50,32 +52,34 @@ public class ReversoCrawler {
         return new ContextTranslation(srcSentence, trgSentence);
     }
 
-    private ContextSentence extractContextSentence(Element parentElement, String className){
-        Element spanElement = parentElement.getElementsByClass(className)
-                .get(0)
+    private ContextSentence extractContextSentence(Element element, String className){
+        return extractHighlights(element.getElementsByClass(className)
+                .first()
                 .getElementsByClass("text")
-                .get(0);
-
-        String html = spanElement.html();
-        List<ContextHighlight> highlights = extractHighlights(html);
-        return new ContextSentence(html, highlights);
+                .first()
+                .html());
     }
 
-    private List<ContextHighlight> extractHighlights(String html) {
+    private ContextSentence extractHighlights(String html) {
         TruncatedText innerText = new TruncatedText(html);
         List<ContextHighlight> highlights = new LinkedList<>();
 
-        innerText.removeAll("</?a[^>]*>");
-
+        removeLinks(innerText);
         while (isHighlighted(innerText.getText())){
-            int startIndex = innerText.truncate(HIGHLIGHT_TAG_OPEN);
-            int endIndex = innerText.truncate(HIGHLIGHT_TAG_CLOSE);
-            highlights.add(new ContextHighlight(startIndex, endIndex));
+            highlights.add(findNextHighlight(innerText));
         }
-
-        return highlights;
+        return new ContextSentence(innerText.getText(), highlights);
     }
 
+    private ContextHighlight findNextHighlight(TruncatedText innerText) {
+        int startIndex = innerText.truncate(HIGHLIGHT_TAG_OPEN);
+        int endIndex = innerText.truncate(HIGHLIGHT_TAG_CLOSE);
+        return new ContextHighlight(startIndex, endIndex);
+    }
+
+    private void removeLinks(TruncatedText innerText) {
+        innerText.removeAll(LINKS_PATTERN.pattern());
+    }
 
     private boolean isHighlighted(String sentence){
         return sentence.contains(HIGHLIGHT_TAG_OPEN) || sentence.contains(HIGHLIGHT_TAG_CLOSE);
@@ -91,7 +95,6 @@ public class ReversoCrawler {
     private String resolveLanguage(Language language){
         return languages.get(language);
     }
-
 
     private static class TruncatedText {
         private String text;
