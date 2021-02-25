@@ -31,7 +31,7 @@ public class MultitranController {
      * @param payload the {@link MultitranTranslationRequest} that holds request to translating
      * @return the {@link MultitranTranslationResponse} containing translations
      */
-    @PostMapping(value="/translate", produces = "application/json")
+    @PostMapping(value="/translation", produces = "application/json")
     public ResponseEntity<MultitranTranslationResponse> translate(@RequestBody MultitranTranslationRequest payload){
         String url = crawler.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
 
