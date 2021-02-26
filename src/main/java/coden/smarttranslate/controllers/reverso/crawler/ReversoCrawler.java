@@ -1,13 +1,12 @@
 package coden.smarttranslate.controllers.reverso.crawler;
 
 import coden.smarttranslate.controllers.reverso.context.ReversoContextProvider;
-import coden.smarttranslate.controllers.reverso.highlight.HighlightedText;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextSentence;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslation;
+import coden.smarttranslate.controllers.reverso.highlight.CuttableText;
 import coden.smarttranslate.controllers.reverso.highlight.HighlightsExtractor;
 import coden.smarttranslate.controllers.reverso.website.ReversoContextUrlProvider;
 import coden.smarttranslate.core.Language;
-import coden.smarttranslate.controllers.reverso.context.ReversoContextHighlight;
-import coden.smarttranslate.controllers.reverso.context.ReversoContextSentence;
-import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslation;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -60,12 +59,8 @@ public class ReversoCrawler implements ReversoContextProvider {
     }
 
     private ReversoContextSentence extractHighlights(String html) {
-        HighlightedText highlightedText = extractor.extract(html);
-        List<ReversoContextHighlight> highlights = highlightedText.getHighlights()
-                .stream()
-                .map(pair -> new ReversoContextHighlight(pair.getLeft(), pair.getRight()))
-                .collect(Collectors.toList());
-        return new ReversoContextSentence(highlightedText.getText(), highlights);
+        CuttableText extracted = extractor.extract(html);
+        return ReversoContextSentence.fromCutPoints(extracted.getText(), extracted.getCutPoints());
     }
 
 }

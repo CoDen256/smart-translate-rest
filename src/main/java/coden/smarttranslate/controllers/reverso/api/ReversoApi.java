@@ -1,10 +1,9 @@
 package coden.smarttranslate.controllers.reverso.api;
 
-import coden.smarttranslate.controllers.reverso.context.ReversoContextHighlight;
 import coden.smarttranslate.controllers.reverso.context.ReversoContextProvider;
 import coden.smarttranslate.controllers.reverso.context.ReversoContextSentence;
 import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslation;
-import coden.smarttranslate.controllers.reverso.highlight.HighlightedText;
+import coden.smarttranslate.controllers.reverso.highlight.CuttableText;
 import coden.smarttranslate.controllers.reverso.highlight.HighlightsExtractor;
 import coden.smarttranslate.controllers.reverso.language.ReversoLanguageResolver;
 import coden.smarttranslate.core.Language;
@@ -63,12 +62,8 @@ public class ReversoApi implements ReversoContextProvider {
     }
 
     private ReversoContextSentence createContextSentence(String text){
-        HighlightedText highlighted = extractor.extract(text);
-        List<ReversoContextHighlight> highlights = highlighted.getHighlights()
-                .stream()
-                .map(pair -> new ReversoContextHighlight(pair.getLeft(), pair.getRight()))
-                .collect(Collectors.toList());
-        return new ReversoContextSentence(highlighted.getText(), highlights);
+        CuttableText extracted = extractor.extract(text);
+        return ReversoContextSentence.fromCutPoints(extracted.getText(), extracted.getCutPoints());
     }
 
 }
