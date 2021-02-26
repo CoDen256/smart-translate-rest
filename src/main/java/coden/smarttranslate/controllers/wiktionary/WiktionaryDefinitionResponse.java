@@ -1,19 +1,18 @@
-package coden.smarttranslate.core.controllers.reverso;
+package coden.smarttranslate.controllers.wiktionary;
 
-import coden.smarttranslate.core.controllers.Language;
-import coden.smarttranslate.core.controllers.reverso.data.ContextTranslation;
+import coden.smarttranslate.core.Language;
 
 import java.util.List;
 
-public class ReversoContextTranslationResponse {
+public class WiktionaryDefinitionResponse {
     private Language targetLanguage;
     private Language sourceLanguage;
 
     private String url;
     private String originalPhrase;
-    private List<ContextTranslation> contextTranslations;
+    private List<String> translation;
 
-    public ReversoContextTranslationResponse(String originalPhrase) {
+    public WiktionaryDefinitionResponse(String originalPhrase) {
         this.originalPhrase = originalPhrase;
     }
 
@@ -41,12 +40,12 @@ public class ReversoContextTranslationResponse {
         this.originalPhrase = originalPhrase;
     }
 
-    public List<ContextTranslation> getContextTranslations() {
-        return contextTranslations;
+    public List<String> getTranslations() {
+        return translation;
     }
 
-    public void setContextTranslations(List<ContextTranslation> contextTranslations) {
-        this.contextTranslations = contextTranslations;
+    public void setTranslations(List<String> translations) {
+        this.translation = translations;
     }
 
     public String getUrl() {

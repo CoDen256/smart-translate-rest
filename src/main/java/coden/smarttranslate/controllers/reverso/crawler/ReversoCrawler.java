@@ -1,13 +1,9 @@
-package coden.smarttranslate.core.controllers.reverso;
+package coden.smarttranslate.controllers.reverso.crawler;
 
-import static coden.smarttranslate.core.controllers.Language.DE;
-import static coden.smarttranslate.core.controllers.Language.EN;
-import static coden.smarttranslate.core.controllers.Language.RU;
-
-import coden.smarttranslate.core.controllers.Language;
-import coden.smarttranslate.core.controllers.reverso.data.ContextHighlight;
-import coden.smarttranslate.core.controllers.reverso.data.ContextSentence;
-import coden.smarttranslate.core.controllers.reverso.data.ContextTranslation;
+import coden.smarttranslate.core.Language;
+import coden.smarttranslate.controllers.reverso.data.ContextHighlight;
+import coden.smarttranslate.controllers.reverso.data.ContextSentence;
+import coden.smarttranslate.controllers.reverso.data.ContextTranslation;
 import org.apache.commons.text.StringSubstitutor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,7 +19,7 @@ import java.util.stream.Collectors;
 public class ReversoCrawler {
 
     private static final String API = "https://context.reverso.net/translation/{source}-{target}/{phrase}";
-    private static final Map<Language, String> languages = Map.of(EN, "english", RU, "russian", DE, "german");
+    private static final Map<Language, String> languages = Map.of(Language.EN, "english", Language.RU, "russian", Language.DE, "german");
 
     public static final String HIGHLIGHT_TAG_OPEN = "<em>";
     public static final String HIGHLIGHT_TAG_CLOSE = "</em>";

@@ -1,10 +1,6 @@
-package coden.smarttranslate.core.controllers.multitran;
+package coden.smarttranslate.controllers.multitran;
 
-import static coden.smarttranslate.core.controllers.Language.DE;
-import static coden.smarttranslate.core.controllers.Language.EN;
-import static coden.smarttranslate.core.controllers.Language.RU;
-
-import coden.smarttranslate.core.controllers.Language;
+import coden.smarttranslate.core.Language;
 import org.apache.commons.text.StringSubstitutor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,7 +17,7 @@ import java.util.stream.Collectors;
 public class MultitranCrawler {
 
     private static final String API = "https://www.multitran.com/m.exe?s={phrase}&l1={source}&l2={target}";
-    private static final Map<Language, String> languages = Map.of(EN, "1", RU, "2", DE, "3");
+    private static final Map<Language, String> languages = Map.of(Language.EN, "1", Language.RU, "2", Language.DE, "3");
 
     private static final Pattern queryStartPattern = Pattern.compile("^/m.exe\\?.*");
     private static final Pattern queryWordSearchPattern = Pattern.compile(".*&?s=[^&]*.*");

@@ -1,6 +1,6 @@
-package coden.smarttranslate.core.controllers.multitran;
+package coden.smarttranslate.controllers.multitran.data;
 
-import coden.smarttranslate.core.controllers.Language;
+import coden.smarttranslate.core.Language;
 
 public class MultitranTranslationRequest {
 

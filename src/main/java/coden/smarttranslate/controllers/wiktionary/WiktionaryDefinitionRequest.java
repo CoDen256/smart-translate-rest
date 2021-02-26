@@ -1,8 +1,8 @@
-package coden.smarttranslate.core.controllers.reverso;
+package coden.smarttranslate.controllers.wiktionary;
 
-import coden.smarttranslate.core.controllers.Language;
+import coden.smarttranslate.core.Language;
 
-public class ReversoContextTranslationRequest {
+public class WiktionaryDefinitionRequest {
 
     private Language targetLanguage;
     private Language sourceLanguage;

@@ -1,5 +1,7 @@
-package coden.smarttranslate.core.controllers.multitran;
+package coden.smarttranslate.controllers.multitran;
 
+import coden.smarttranslate.controllers.multitran.data.MultitranTranslationRequest;
+import coden.smarttranslate.controllers.multitran.data.MultitranTranslationResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package coden.smarttranslate.core.controllers.reverso.data;
+package coden.smarttranslate.controllers.reverso.data;
 
 import java.util.List;
 

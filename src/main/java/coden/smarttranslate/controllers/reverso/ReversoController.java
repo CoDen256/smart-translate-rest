@@ -1,6 +1,9 @@
-package coden.smarttranslate.core.controllers.reverso;
+package coden.smarttranslate.controllers.reverso;
 
-import coden.smarttranslate.core.controllers.reverso.data.ContextTranslation;
+import coden.smarttranslate.controllers.reverso.crawler.ReversoCrawler;
+import coden.smarttranslate.controllers.reverso.data.ContextTranslation;
+import coden.smarttranslate.controllers.reverso.data.ReversoContextTranslationRequest;
+import coden.smarttranslate.controllers.reverso.data.ReversoContextTranslationResponse;
 import org.jsoup.HttpStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
