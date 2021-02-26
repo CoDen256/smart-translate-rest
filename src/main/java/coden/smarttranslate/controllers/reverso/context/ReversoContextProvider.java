@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface ReversoContextProvider {
     List<ReversoContextTranslation> getContextTranslations(Language source, Language target, String phrase) throws Exception;
-    String getUrl(Language source, Language target, String phrase);
 }

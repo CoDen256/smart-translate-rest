@@ -3,7 +3,7 @@ package coden.smarttranslate.controllers.reverso.context;
 import coden.smarttranslate.core.Language;
 
 import java.util.List;
-
+// TODO: do we need setters?
 public class ReversoContextTranslationResponse {
     private Language targetLanguage;
     private Language sourceLanguage;

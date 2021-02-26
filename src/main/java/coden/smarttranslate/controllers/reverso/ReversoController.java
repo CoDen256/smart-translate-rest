@@ -4,6 +4,7 @@ import coden.smarttranslate.controllers.reverso.context.ReversoContextProvider;
 import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslation;
 import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslationRequest;
 import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslationResponse;
+import coden.smarttranslate.controllers.reverso.website.ReversoContextUrlProvider;
 import org.jsoup.HttpStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,11 @@ import java.util.List;
 public class ReversoController {
 
     private final ReversoContextProvider contextProvider;
+    private final ReversoContextUrlProvider urlProvider;
 
-    public ReversoController(ReversoContextProvider contextProvider) {
+    public ReversoController(ReversoContextProvider contextProvider, ReversoContextUrlProvider urlProvider) {
         this.contextProvider = contextProvider;
+        this.urlProvider = urlProvider;
     }
 
     /**
@@ -38,9 +41,7 @@ public class ReversoController {
      */
     @PostMapping(value="/context", produces = "application/json")
     public ResponseEntity<ReversoContextTranslationResponse> context(@RequestBody ReversoContextTranslationRequest payload){
-        String url = contextProvider.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
-
-        ReversoContextTranslationResponse response = createReversoContextResponse(payload, url);
+        ReversoContextTranslationResponse response = createReversoContextResponse(payload);
         try {
             List<ReversoContextTranslation> reversoContextTranslations = contextProvider.getContextTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
             response.setContextTranslations(reversoContextTranslations);
@@ -56,11 +57,12 @@ public class ReversoController {
         }
     }
 
-    private ReversoContextTranslationResponse createReversoContextResponse(ReversoContextTranslationRequest payload, String url) {
+    private ReversoContextTranslationResponse createReversoContextResponse(ReversoContextTranslationRequest payload) {
+        String contextUrl = urlProvider.getContextUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
         ReversoContextTranslationResponse response = new ReversoContextTranslationResponse(payload.getPhrase());
         response.setSourceLanguage(payload.getSourceLanguage());
         response.setTargetLanguage(payload.getTargetLanguage());
-        response.setUrl(url);
+        response.setUrl(contextUrl);
         return response;
     }
 }
