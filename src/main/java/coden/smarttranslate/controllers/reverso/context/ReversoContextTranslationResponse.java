@@ -1,4 +1,4 @@
-package coden.smarttranslate.controllers.reverso.data;
+package coden.smarttranslate.controllers.reverso.context;
 
 import coden.smarttranslate.core.Language;
 
@@ -10,7 +10,7 @@ public class ReversoContextTranslationResponse {
 
     private String url;
     private String originalPhrase;
-    private List<ContextTranslation> contextTranslations;
+    private List<ReversoContextTranslation> reversoContextTranslations;
 
     public ReversoContextTranslationResponse(String originalPhrase) {
         this.originalPhrase = originalPhrase;
@@ -40,12 +40,12 @@ public class ReversoContextTranslationResponse {
         this.originalPhrase = originalPhrase;
     }
 
-    public List<ContextTranslation> getContextTranslations() {
-        return contextTranslations;
+    public List<ReversoContextTranslation> getContextTranslations() {
+        return reversoContextTranslations;
     }
 
-    public void setContextTranslations(List<ContextTranslation> contextTranslations) {
-        this.contextTranslations = contextTranslations;
+    public void setContextTranslations(List<ReversoContextTranslation> reversoContextTranslations) {
+        this.reversoContextTranslations = reversoContextTranslations;
     }
 
     public String getUrl() {

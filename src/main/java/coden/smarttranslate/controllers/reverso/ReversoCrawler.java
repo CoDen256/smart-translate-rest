@@ -1,13 +1,15 @@
-package coden.smarttranslate.controllers.reverso.crawler;
+package coden.smarttranslate.controllers.reverso;
 
+import coden.smarttranslate.controllers.reverso.context.ReversoContextProvider;
 import coden.smarttranslate.core.Language;
-import coden.smarttranslate.controllers.reverso.data.ContextHighlight;
-import coden.smarttranslate.controllers.reverso.data.ContextSentence;
-import coden.smarttranslate.controllers.reverso.data.ContextTranslation;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextHighlight;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextSentence;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslation;
 import org.apache.commons.text.StringSubstitutor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -16,7 +18,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ReversoCrawler {
+@Component
+public class ReversoCrawler implements ReversoContextProvider {
 
     private static final String API = "https://context.reverso.net/translation/{source}-{target}/{phrase}";
     private static final Map<Language, String> languages = Map.of(Language.EN, "english", Language.RU, "russian", Language.DE, "german");
@@ -25,14 +28,14 @@ public class ReversoCrawler {
     public static final String HIGHLIGHT_TAG_CLOSE = "</em>";
     public static final Pattern LINKS_PATTERN = Pattern.compile("</?a[^>]*>");
 
-
-    public List<ContextTranslation> parseContextTranslation(Language source, Language target, String phrase) throws IOException {
+    @Override
+    public List<ReversoContextTranslation> getContextTranslations(Language source, Language target, String phrase) throws IOException {
         String url = getUrl(source, target, phrase);
         Document document = Jsoup.connect(url).get();
         return parseDocumentContext(document);
     }
 
-    private List<ContextTranslation> parseDocumentContext(Document document){
+    private List<ReversoContextTranslation> parseDocumentContext(Document document){
         return document.getElementById("examples-content")
                 .getElementsByClass("example")
                 .stream()
@@ -41,14 +44,14 @@ public class ReversoCrawler {
     }
 
 
-    private ContextTranslation extractContext(Element exampleElement){
-        ContextSentence srcSentence = extractContextSentence(exampleElement, "src");
-        ContextSentence trgSentence = extractContextSentence(exampleElement, "trg");
+    private ReversoContextTranslation extractContext(Element exampleElement){
+        ReversoContextSentence srcSentence = extractContextSentence(exampleElement, "src");
+        ReversoContextSentence trgSentence = extractContextSentence(exampleElement, "trg");
 
-        return new ContextTranslation(srcSentence, trgSentence);
+        return new ReversoContextTranslation(srcSentence, trgSentence);
     }
 
-    private ContextSentence extractContextSentence(Element element, String className){
+    private ReversoContextSentence extractContextSentence(Element element, String className){
         return extractHighlights(element.getElementsByClass(className)
                 .first()
                 .getElementsByClass("text")
@@ -56,21 +59,21 @@ public class ReversoCrawler {
                 .html());
     }
 
-    private ContextSentence extractHighlights(String html) {
+    private ReversoContextSentence extractHighlights(String html) {
         TruncatedText innerText = new TruncatedText(html);
-        List<ContextHighlight> highlights = new LinkedList<>();
+        List<ReversoContextHighlight> highlights = new LinkedList<>();
 
         removeLinks(innerText);
         while (isHighlighted(innerText.getText())){
             highlights.add(findNextHighlight(innerText));
         }
-        return new ContextSentence(innerText.getText(), highlights);
+        return new ReversoContextSentence(innerText.getText(), highlights);
     }
 
-    private ContextHighlight findNextHighlight(TruncatedText innerText) {
+    private ReversoContextHighlight findNextHighlight(TruncatedText innerText) {
         int startIndex = innerText.truncate(HIGHLIGHT_TAG_OPEN);
         int endIndex = innerText.truncate(HIGHLIGHT_TAG_CLOSE);
-        return new ContextHighlight(startIndex, endIndex);
+        return new ReversoContextHighlight(startIndex, endIndex);
     }
 
     private void removeLinks(TruncatedText innerText) {
@@ -81,6 +84,7 @@ public class ReversoCrawler {
         return sentence.contains(HIGHLIGHT_TAG_OPEN) || sentence.contains(HIGHLIGHT_TAG_CLOSE);
     }
 
+    @Override
     public String getUrl(Language source, Language target, String phrase){
         return StringSubstitutor.replace(API, Map.of(
                 "phrase", phrase,

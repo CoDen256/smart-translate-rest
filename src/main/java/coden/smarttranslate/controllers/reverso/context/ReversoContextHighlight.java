@@ -1,10 +1,10 @@
-package coden.smarttranslate.controllers.reverso.data;
+package coden.smarttranslate.controllers.reverso.context;
 
-public class ContextHighlight {
+public class ReversoContextHighlight {
     private final int start;
     private final int end;
 
-    public ContextHighlight(int start, int end) {
+    public ReversoContextHighlight(int start, int end) {
         this.start = start;
         this.end = end;
     }

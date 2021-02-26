@@ -1,4 +1,4 @@
-package coden.smarttranslate.controllers.reverso.data;
+package coden.smarttranslate.controllers.reverso.context;
 
 import coden.smarttranslate.core.Language;
 

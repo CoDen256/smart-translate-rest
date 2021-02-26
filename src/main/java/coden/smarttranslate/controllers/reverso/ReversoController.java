@@ -1,9 +1,9 @@
 package coden.smarttranslate.controllers.reverso;
 
-import coden.smarttranslate.controllers.reverso.crawler.ReversoCrawler;
-import coden.smarttranslate.controllers.reverso.data.ContextTranslation;
-import coden.smarttranslate.controllers.reverso.data.ReversoContextTranslationRequest;
-import coden.smarttranslate.controllers.reverso.data.ReversoContextTranslationResponse;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextProvider;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslation;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslationRequest;
+import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslationResponse;
 import org.jsoup.HttpStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,10 @@ import java.util.List;
 @RequestMapping("/api/reverso")
 public class ReversoController {
 
-    private final ReversoCrawler crawler;
+    private final ReversoContextProvider contextProvider;
 
-    public ReversoController() {
-        crawler = new ReversoCrawler();
+    public ReversoController(ReversoContextProvider contextProvider) {
+        this.contextProvider = contextProvider;
     }
 
     /**
@@ -38,12 +38,12 @@ public class ReversoController {
      */
     @PostMapping(value="/context", produces = "application/json")
     public ResponseEntity<ReversoContextTranslationResponse> context(@RequestBody ReversoContextTranslationRequest payload){
-        String url = crawler.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
+        String url = contextProvider.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
 
         ReversoContextTranslationResponse response = createReversoContextResponse(payload, url);
         try {
-            List<ContextTranslation> contextTranslations = crawler.parseContextTranslation(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
-            response.setContextTranslations(contextTranslations);
+            List<ReversoContextTranslation> reversoContextTranslations = contextProvider.getContextTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
+            response.setContextTranslations(reversoContextTranslations);
             return ResponseEntity.ok(response);
         } catch (HttpStatusException e) {
             if (e.getStatusCode() == 404){
