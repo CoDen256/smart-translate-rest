@@ -1,11 +1,14 @@
 package coden.smarttranslate.controllers.multitran;
 
+import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationProvider;
+import coden.smarttranslate.controllers.multitran.translation.MultitranTranslation;
 import coden.smarttranslate.core.Language;
 import org.apache.commons.text.StringSubstitutor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +17,8 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class MultitranCrawler {
+@Component
+public class MultitranCrawler implements MultitranTranslationProvider {
 
     private static final String API = "https://www.multitran.com/m.exe?s={phrase}&l1={source}&l2={target}";
     private static final Map<Language, String> languages = Map.of(Language.EN, "1", Language.RU, "2", Language.DE, "3");
@@ -23,14 +27,14 @@ public class MultitranCrawler {
     private static final Pattern queryWordSearchPattern = Pattern.compile(".*&?s=[^&]*.*");
     private static final String queryLanguagePattern = ".*&?%s=%s.*";
 
-
-    public List<String> parseTranslations(Language source, Language target, String phrase) throws IOException {
+    @Override
+    public List<MultitranTranslation> getTranslations(Language source, Language target, String phrase) throws IOException {
         String url = getUrl(source, target, phrase);
         Document document = Jsoup.connect(url).get();
         return parseDocumentTranslations(document, source, target);
     }
 
-    private List<String> parseDocumentTranslations(Document document, Language source, Language target){
+    private List<MultitranTranslation> parseDocumentTranslations(Document document, Language source, Language target){
         Predicate<Element> translationHrefMatcher = el -> matchesTranslationHref(el.attr("href"), target, source);
         return document.getElementsByClass("trans")
                 .stream()
@@ -38,10 +42,12 @@ public class MultitranCrawler {
                 .flatMap(Elements::stream)
                 .filter(translationHrefMatcher)
                 .map(Element::text)
+                .map(MultitranTranslation::new)
                 .collect(Collectors.toList());
     }
 
 
+    @Override
     public String getUrl(Language source, Language target, String phrase){
         return StringSubstitutor.replace(API, Map.of(
                 "phrase", phrase,
@@ -72,5 +78,4 @@ public class MultitranCrawler {
     private String resolveLanguage(Language language){
         return languages.get(language);
     }
-
 }

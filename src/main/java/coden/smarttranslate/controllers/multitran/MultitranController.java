@@ -1,7 +1,10 @@
 package coden.smarttranslate.controllers.multitran;
 
-import coden.smarttranslate.controllers.multitran.data.MultitranTranslationRequest;
-import coden.smarttranslate.controllers.multitran.data.MultitranTranslationResponse;
+import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationProvider;
+import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationRequest;
+import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationResponse;
+import coden.smarttranslate.controllers.multitran.translation.MultitranTranslation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,11 +19,12 @@ import java.util.List;
 @RequestMapping("/api/multitran")
 public class MultitranController {
 
-    private final MultitranCrawler crawler;
+    private final MultitranTranslationProvider translator;
 
-    public MultitranController() {
-        crawler = new MultitranCrawler();
+    public MultitranController(MultitranTranslationProvider translator) {
+        this.translator = translator;
     }
+
 
     /**
      * Returns {@link MultitranTranslationResponse} containing list of translations, that were parsed
@@ -35,12 +39,12 @@ public class MultitranController {
      */
     @PostMapping(value="/translation", produces = "application/json")
     public ResponseEntity<MultitranTranslationResponse> translate(@RequestBody MultitranTranslationRequest payload){
-        String url = crawler.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
+        String url = translator.getUrl(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
 
         MultitranTranslationResponse response = createMultitranTranslationResponse(payload, url);
         try {
-            List<String> translations = crawler.parseTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
-            response.setTranslations(translations);
+            List<MultitranTranslation> multitranTranslations = translator.getTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
+            response.setTranslations(multitranTranslations);
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);

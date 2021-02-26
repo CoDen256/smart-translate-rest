@@ -1,4 +1,4 @@
-package coden.smarttranslate.controllers.multitran.data;
+package coden.smarttranslate.controllers.multitran.translation;
 
 import coden.smarttranslate.core.Language;
 

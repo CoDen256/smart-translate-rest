@@ -1,4 +1,4 @@
-package coden.smarttranslate.controllers.multitran.data;
+package coden.smarttranslate.controllers.multitran.translation;
 
 import coden.smarttranslate.core.Language;
 
@@ -10,7 +10,7 @@ public class MultitranTranslationResponse {
 
     private String url;
     private String originalPhrase;
-    private List<String> translation;
+    private List<MultitranTranslation> multitranTranslations;
 
     public MultitranTranslationResponse(String originalPhrase) {
         this.originalPhrase = originalPhrase;
@@ -40,12 +40,12 @@ public class MultitranTranslationResponse {
         this.originalPhrase = originalPhrase;
     }
 
-    public List<String> getTranslations() {
-        return translation;
+    public List<MultitranTranslation> getTranslations() {
+        return multitranTranslations;
     }
 
-    public void setTranslations(List<String> translations) {
-        this.translation = translations;
+    public void setTranslations(List<MultitranTranslation> multitranTranslations) {
+        this.multitranTranslations = multitranTranslations;
     }
 
     public String getUrl() {
