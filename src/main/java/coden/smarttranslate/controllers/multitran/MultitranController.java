@@ -25,7 +25,6 @@ public class MultitranController {
         this.translator = translator;
     }
 
-
     /**
      * Returns {@link MultitranTranslationResponse} containing list of translations, that were parsed
      * from www.multitran.com.
@@ -46,7 +45,7 @@ public class MultitranController {
             List<MultitranTranslation> multitranTranslations = translator.getTranslations(payload.getSourceLanguage(), payload.getTargetLanguage(), payload.getPhrase());
             response.setTranslations(multitranTranslations);
             return ResponseEntity.ok(response);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
         }
     }

@@ -28,7 +28,7 @@ public class MultitranCrawler implements MultitranTranslationProvider {
     private static final String queryLanguagePattern = ".*&?%s=%s.*";
 
     @Override
-    public List<MultitranTranslation> getTranslations(Language source, Language target, String phrase) throws IOException {
+    public List<MultitranTranslation> getTranslations(Language source, Language target, String phrase) throws Exception {
         String url = getUrl(source, target, phrase);
         Document document = Jsoup.connect(url).get();
         return parseDocumentTranslations(document, source, target);
