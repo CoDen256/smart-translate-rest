@@ -1,27 +1,27 @@
 package coden.smarttranslate.controllers.multitran.translation;
 
-import coden.smarttranslate.core.Language;
+import coden.multitran.language.MultitranLanguage;
 
 public class MultitranTranslationRequest {
 
-    private Language targetLanguage;
-    private Language sourceLanguage;
+    private MultitranLanguage targetLanguage;
+    private MultitranLanguage sourceLanguage;
 
     private String phrase;
 
-    public Language getTargetLanguage() {
+    public MultitranLanguage getTargetLanguage() {
         return targetLanguage;
     }
 
-    public void setTargetLanguage(Language targetLanguage) {
+    public void setTargetLanguage(MultitranLanguage targetLanguage) {
         this.targetLanguage = targetLanguage;
     }
 
-    public Language getSourceLanguage() {
+    public MultitranLanguage getSourceLanguage() {
         return sourceLanguage;
     }
 
-    public void setSourceLanguage(Language sourceLanguage) {
+    public void setSourceLanguage(MultitranLanguage sourceLanguage) {
         this.sourceLanguage = sourceLanguage;
     }
 
