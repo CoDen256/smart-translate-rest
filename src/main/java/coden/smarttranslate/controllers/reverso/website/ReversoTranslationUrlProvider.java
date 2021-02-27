@@ -1,7 +1,7 @@
-package coden.smarttranslate.controllers.multitran.website;
+package coden.smarttranslate.controllers.reverso.website;
 
 import coden.smarttranslate.core.Language;
 
-public interface MultitranTranslationUrlProvider {
+public interface ReversoTranslationUrlProvider {
     String getTranslationUrl(Language source, Language target, String phrase);
 }

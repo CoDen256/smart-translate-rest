@@ -28,7 +28,7 @@ public class ReversoCrawler implements ReversoContextProvider {
     }
 
     @Override
-    public List<ReversoContextTranslation> getContextTranslations(Language source, Language target, String phrase) throws IOException {
+    public List<ReversoContextTranslation> getContexts(Language source, Language target, String phrase) throws IOException {
         String url = urlProvider.getContextUrl(source, target, phrase);
         Document document = Jsoup.connect(url).get();
         return parseDocumentContext(document);

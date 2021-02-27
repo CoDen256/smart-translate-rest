@@ -1,7 +1,7 @@
 package coden.smarttranslate.controllers.multitran;
 
-import coden.smarttranslate.controllers.multitran.translation.MultitranTranslation;
-import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationProvider;
+import coden.multitran.translation.MultitranTranslation;
+import coden.multitran.MultitranClient;
 import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationRequest;
 import coden.smarttranslate.controllers.multitran.translation.MultitranTranslationResponse;
 import coden.smarttranslate.controllers.multitran.website.MultitranTranslationUrlProvider;
@@ -18,10 +18,10 @@ import java.util.List;
 @RequestMapping("/api/multitran")
 public class MultitranController {
 
-    private final MultitranTranslationProvider translator;
+    private final MultitranClient translator;
     private final MultitranTranslationUrlProvider translationUrlProvider;
 
-    public MultitranController(MultitranTranslationProvider translator, MultitranTranslationUrlProvider translationUrlProvider) {
+    public MultitranController(MultitranClient translator, MultitranTranslationUrlProvider translationUrlProvider) {
         this.translator = translator;
         this.translationUrlProvider = translationUrlProvider;
     }

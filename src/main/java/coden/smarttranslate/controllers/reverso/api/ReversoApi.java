@@ -6,6 +6,7 @@ import coden.smarttranslate.controllers.reverso.context.ReversoContextTranslatio
 import coden.smarttranslate.controllers.reverso.highlight.CuttableText;
 import coden.smarttranslate.controllers.reverso.highlight.HighlightsExtractor;
 import coden.smarttranslate.controllers.reverso.language.ReversoLanguageResolver;
+import coden.smarttranslate.controllers.reverso.translation.ReversoTranslationProvider;
 import coden.smarttranslate.core.Language;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -17,23 +18,30 @@ import java.util.stream.Collectors;
 
 @Primary
 @Component
-public class ReversoApi implements ReversoContextProvider {
+public class ReversoApi implements ReversoContextProvider, ReversoTranslationProvider {
 
-    private static final String API = "https://context.reverso.net/bst-query-service";
-    private final ReversoLanguageResolver resolver;
-    private final WebClient client;
+    private static final String CONTEXT_API = "https://context.reverso.net/bst-query-service";
+    private static final String TRANSLATE_API = "https://api.reverso.net/translate/v1/translation";
+    private final ReversoLanguageResolver ctxResolver;
+    private final ReversoLanguageResolver transResolver;
+    private final WebClient contextClient;
+    private final WebClient transClient;
     private final HighlightsExtractor extractor;
 
-    public ReversoApi(@Qualifier("API") ReversoLanguageResolver resolver, HighlightsExtractor extractor) {
-        client = WebClient.create(API);
-        this.resolver = resolver;
+    public ReversoApi(@Qualifier("API-context") ReversoLanguageResolver ctxResolver,
+                      @Qualifier("API-translate") ReversoLanguageResolver transResolver,
+                      HighlightsExtractor extractor) {
+        contextClient = WebClient.create(CONTEXT_API);
+        transClient = WebClient.create(TRANSLATE_API);
+        this.ctxResolver = ctxResolver;
+        this.transResolver = transResolver;
         this.extractor = extractor;
     }
 
     // TODO: may be not block, and web client via config
     @Override
-    public List<ReversoContextTranslation> getContextTranslations(Language source, Language target, String phrase) throws Exception {
-        return client.post()
+    public List<ReversoContextTranslation> getTranslations(Language source, Language target, String phrase) throws Exception {
+        return contextClient.post()
                 .bodyValue(createRequest(source, target, phrase))
                 .retrieve()
                 .bodyToMono(ReversoContextResponse.class)
@@ -48,8 +56,8 @@ public class ReversoApi implements ReversoContextProvider {
         ReversoContextRequest request = new ReversoContextRequest();
         request.setMode(0);
         request.setNPage(1);
-        request.setSourceLang(resolver.resolve(source));
-        request.setTargetLang(resolver.resolve(target));
+        request.setSourceLang(ctxResolver.resolve(source));
+        request.setTargetLang(ctxResolver.resolve(target));
         request.setSourceText(phrase);
         request.setTargetText("");
         return request;
@@ -66,4 +74,25 @@ public class ReversoApi implements ReversoContextProvider {
         return ReversoContextSentence.fromCutPoints(extracted.getText(), extracted.getCutPoints());
     }
 
+    @Override
+    public List<ReversoContextTranslation> getContexts(Language source, Language target, String phrase) throws Exception {
+        return null;
+    }
+
+    private ReversoTranslationRequest createRequest(Language source, Language target, String phrase){
+        ReversoTranslationRequest request = new ReversoTranslationRequest();
+        request.setMode(0);
+        request.setNPage(1);
+        request.setSourceLang(ctxResolver.resolve(source));
+        request.setTargetLang(ctxResolver.resolve(target));
+        request.setSourceText(phrase);
+        request.setTargetText("");
+        return request;
+    }
+
+    private ReversoContextTranslation mapToTranslations(ReversoTranslationResponse.Context response){
+        ReversoContextSentence sourceContext = createContextSentence(response.getSourceSentence());
+        ReversoContextSentence targetContext = createContextSentence(response.getTargetSentence());
+        return new ReversoContextTranslation(sourceContext, targetContext);
+    }
 }

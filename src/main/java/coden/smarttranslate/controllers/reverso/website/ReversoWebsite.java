@@ -9,9 +9,10 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-public class ReversoWebsite implements ReversoContextUrlProvider {
+public class ReversoWebsite implements ReversoContextUrlProvider, ReversoTranslationUrlProvider {
 
-    private static final String URL = "https://context.reverso.net/translation/{source}-{target}/{phrase}";
+    private static final String CONTEXT_URL = "https://context.reverso.net/translation/{source}-{target}/{phrase}";
+    private static final String TRANSLATION_URL = "https://www.reverso.net/translationresults.aspx?lang=EN&direction={source}-{target}";
     private final ReversoLanguageResolver resolver;
 
     public ReversoWebsite(@Qualifier("Website") ReversoLanguageResolver resolver) {
@@ -20,8 +21,15 @@ public class ReversoWebsite implements ReversoContextUrlProvider {
 
     @Override
     public String getContextUrl(Language source, Language target, String phrase) {
-        return StringSubstitutor.replace(URL, Map.of(
+        return StringSubstitutor.replace(CONTEXT_URL, Map.of(
                 "phrase", phrase,
+                "source", resolver.resolve(source),
+                "target", resolver.resolve(target)), "{", "}");
+    }
+
+    @Override
+    public String getTranslationUrl(Language source, Language target, String phrase) {
+        return StringSubstitutor.replace(TRANSLATION_URL, Map.of(
                 "source", resolver.resolve(source),
                 "target", resolver.resolve(target)), "{", "}");
     }

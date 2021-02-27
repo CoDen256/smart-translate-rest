@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-@Qualifier("API")
-public class ReversoApiLanguageResolver implements ReversoLanguageResolver{
+@Qualifier("API-context")
+public class ReversoContextApiLanguageResolver implements ReversoLanguageResolver{
     private static final Map<Language, String> languages = Map.of(Language.EN, "en", Language.RU, "ru", Language.DE, "de");
     public String resolve(Language language){
         return languages.get(language);

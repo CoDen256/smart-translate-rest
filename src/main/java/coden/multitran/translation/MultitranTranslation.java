@@ -1,4 +1,4 @@
-package coden.smarttranslate.controllers.multitran.translation;
+package coden.multitran.translation;
 
 public class MultitranTranslation {
     private String translation;

@@ -1,19 +1,18 @@
-package coden.smarttranslate.controllers.multitran.translation;
+package coden.smarttranslate.controllers.reverso.translation;
 
-import coden.multitran.translation.MultitranTranslation;
 import coden.smarttranslate.core.Language;
 
 import java.util.List;
 
-public class MultitranTranslationResponse {
+public class ReversoTranslationResponse {
     private Language targetLanguage;
     private Language sourceLanguage;
 
     private String url;
     private String originalPhrase;
-    private List<MultitranTranslation> multitranTranslations;
+    private List<ReversoTranslation> reversoTranslations;
 
-    public MultitranTranslationResponse(String originalPhrase) {
+    public ReversoTranslationResponse(String originalPhrase) {
         this.originalPhrase = originalPhrase;
     }
 
@@ -41,12 +40,12 @@ public class MultitranTranslationResponse {
         this.originalPhrase = originalPhrase;
     }
 
-    public List<MultitranTranslation> getTranslations() {
-        return multitranTranslations;
+    public List<ReversoTranslation> getTranslations() {
+        return reversoTranslations;
     }
 
-    public void setTranslations(List<MultitranTranslation> multitranTranslations) {
-        this.multitranTranslations = multitranTranslations;
+    public void setTranslations(List<ReversoTranslation> reversoTranslations) {
+        this.reversoTranslations = reversoTranslations;
     }
 
     public String getUrl() {
