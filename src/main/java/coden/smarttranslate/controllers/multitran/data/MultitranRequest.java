@@ -1,8 +1,8 @@
-package coden.smarttranslate.controllers.multitran.translation;
+package coden.smarttranslate.controllers.multitran.data;
 
 import coden.multitran.language.MultitranLanguage;
 
-public class MultitranTranslationRequest {
+public class MultitranRequest {
 
     private MultitranLanguage targetLanguage;
     private MultitranLanguage sourceLanguage;

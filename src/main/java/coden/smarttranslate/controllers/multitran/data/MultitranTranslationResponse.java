@@ -1,4 +1,4 @@
-package coden.smarttranslate.controllers.multitran.translation;
+package coden.smarttranslate.controllers.multitran.data;
 
 import coden.multitran.language.MultitranLanguage;
 import coden.multitran.translation.MultitranTranslation;
@@ -12,6 +12,12 @@ public class MultitranTranslationResponse {
     private String url;
     private String originalPhrase;
     private List<MultitranTranslation> multitranTranslations;
+
+    public MultitranTranslationResponse(MultitranRequest request) {
+        setOriginalPhrase(request.getPhrase());
+        setSourceLanguage(request.getSourceLanguage());
+        setTargetLanguage(request.getTargetLanguage());
+    }
 
     public MultitranTranslationResponse(String originalPhrase) {
         this.originalPhrase = originalPhrase;
