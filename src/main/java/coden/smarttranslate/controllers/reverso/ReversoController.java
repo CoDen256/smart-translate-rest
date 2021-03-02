@@ -4,6 +4,7 @@ import coden.reverso.ReversoClient;
 import coden.reverso.website.ReversoUrls;
 import coden.smarttranslate.controllers.reverso.data.ReversoContextResponse;
 import coden.smarttranslate.controllers.reverso.data.ReversoRequest;
+import coden.smarttranslate.controllers.reverso.data.ReversoTranslationResponse;
 import org.jsoup.HttpStatusException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,37 @@ public class ReversoController {
         response.setUrl(ReversoUrls.getContextUrl(request.getSourceLanguage(), request.getTargetLanguage(), request.getPhrase()));
         try {
             response.setContexts(client.getContexts(request.getSourceLanguage(), request.getTargetLanguage(), request.getPhrase())
+                    .collect(Collectors.toList()));
+            return ResponseEntity.ok(response);
+        } catch (HttpStatusException e) {
+            if (e.getStatusCode() == 404) {
+                response.setContexts(Collections.emptyList());
+                return ResponseEntity.ok(response);
+            }
+            return ResponseEntity.status(e.getStatusCode()).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(response);
+        }
+    }
+
+    /**
+     * Returns {@link ReversoTranslationResponse} containing list of translations, that were parsed
+     * from reverso API.
+     * Following Status Codes could be returned by calling this request:
+     * 1) 100 - OK, contains list of translations (may be empty)
+     * 2) 400 - Bad Request, if {@link ReversoRequest} does not contain necessary information
+     * 3) 503 - Service Unavailable, if reverso API cannot be accessed for some reason.
+     *
+     * @param request
+     *         the {@link ReversoRequest} that holds request to fetching the contexts
+     * @return the {@link ReversoContextResponse} containing contexts
+     */
+    @PostMapping(value = "/translation", produces = "application/json")
+    public ResponseEntity<ReversoTranslationResponse> translation(@RequestBody ReversoRequest request) {
+        ReversoTranslationResponse response = new ReversoTranslationResponse(request);
+        response.setUrl(ReversoUrls.getTranslationUrl(request.getSourceLanguage(), request.getTargetLanguage(), request.getPhrase()));
+        try {
+            response.setContexts(client.getTranslations(request.getSourceLanguage(), request.getTargetLanguage(), request.getPhrase())
                     .collect(Collectors.toList()));
             return ResponseEntity.ok(response);
         } catch (HttpStatusException e) {
