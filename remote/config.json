@@ -1,10 +1,9 @@
 
 {
-    "name": "my-server",
     "script": "/usr/local/jdk-11.0.10/bin/java",
     "args": [
         "-jar",
-        "smart-translate-api-0.0.1-SNAPSHOT.jar"
+        "smart-translate-rest-0.0.2.jar"
     ],
     "exec_interpreter": "",
     "exec_mode": "fork",
