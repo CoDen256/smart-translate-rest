@@ -7,7 +7,9 @@ plugins {
 group = 'coden'
 version = '0.0.2'
 sourceCompatibility = '11'
-
+bootJar{
+    destinationDirectory.set(file("$rootDir/remote"))
+}
 repositories {
     mavenCentral()
     mavenLocal()
