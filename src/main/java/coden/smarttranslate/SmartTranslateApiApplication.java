@@ -8,6 +8,7 @@ public class SmartTranslateApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SmartTranslateApiApplication.class, args);
+
     }
 
 }
